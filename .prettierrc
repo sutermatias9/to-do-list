@@ -13,5 +13,15 @@
       "files": "*.{cmp,page,component}",
       "options": { "parser": "html" }
     }
-  ]
+  ],
+  "singleQuote": true,
+  "printWidth": 120,
+  "editor.formatOnSave": true,
+  "proseWrap": "preserve",
+  "tabWidth": 4,
+  "requireConfig": false,
+  "useTabs": false,
+  "bracketSpacing": true,
+  "jsxBracketSameLine": false,
+  "semi": true
 }
