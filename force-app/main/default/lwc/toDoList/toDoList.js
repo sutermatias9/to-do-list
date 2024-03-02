@@ -8,7 +8,17 @@ export default class ToDoList extends LightningElement {
         this.inputText = event.detail.value;
     }
 
+    handleInputKeyDown(event) {
+        if (event.key === 'Enter') {
+            this.addTask();
+        }
+    }
+
     handleAddClick() {
+        this.addTask();
+    }
+
+    addTask() {
         if (this.inputText) {
             this.taskList.push(this.inputText);
             this.clearInput();
