@@ -18,6 +18,15 @@ export default class ToDoList extends LightningElement {
         this.addTask();
     }
 
+    handleTaskCompleted(event) {
+        event.currentTarget.markAsCompleted();
+    }
+
+    handleTaskDelete(event) {
+        const taskIndex = this.taskList.indexOf(event.currentTarget.task);
+        this.taskList.splice(taskIndex, 1);
+    }
+
     addTask() {
         if (this.inputText) {
             this.taskList.push(this.inputText);

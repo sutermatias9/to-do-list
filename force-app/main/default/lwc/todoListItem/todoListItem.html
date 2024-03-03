@@ -3,13 +3,14 @@
     <div class="slds-col slds-box slds-var-m-bottom_small">
         <lightning-layout>
             <lightning-layout-item size="9">
-                <span class="slds-text-title">{task}</span>
+                <p class="slds-text-title">{task}</p>
             </lightning-layout-item>
             <lightning-layout-item>
                 <lightning-button-icon icon-name="utility:check" variant="brand" title="Mark as Completed" size="medium"
-                    class="slds-var-m-right_small" onclick={handleMarkAsCompletedClick}></lightning-button-icon>
+                    class="slds-var-m-right_small" disabled={areButtonsDisabled}
+                    onclick={handleMarkAsCompletedClick}></lightning-button-icon>
                 <lightning-button-icon icon-name="utility:delete" title="Delete Task" size="medium"
-                    onclick={handleDeleteClick}></lightning-button-icon>
+                    disabled={areButtonsDisabled} onclick={handleDeleteClick}></lightning-button-icon>
             </lightning-layout-item>
         </lightning-layout>
     </div>

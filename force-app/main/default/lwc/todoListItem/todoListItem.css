@@ -1,0 +1,5 @@
+.completed {
+    font-style: italic;
+    text-decoration: line-through;
+    color: rgb(132, 132, 132);
+}
