@@ -1,5 +1,6 @@
 import { LightningElement, track } from 'lwc';
 import createTask from '@salesforce/apex/TaskHandler.createTask';
+import deleteTask from '@salesforce/apex/TaskHandler.deleteTask';
 
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import currentUserId from '@salesforce/user/Id';
@@ -7,11 +8,11 @@ import currentUserId from '@salesforce/user/Id';
 export default class ToDoList extends LightningElement {
     userId = currentUserId;
 
-    inputText;
+    taskSubject;
     @track taskList = [];
 
     handleInputChange(event) {
-        this.inputText = event.detail.value;
+        this.taskSubject = event.detail.value;
     }
 
     handleInputKeyDown(event) {
@@ -29,16 +30,23 @@ export default class ToDoList extends LightningElement {
     }
 
     handleTaskDelete(event) {
-        const taskIndex = this.taskList.indexOf(event.currentTarget.task);
-        this.taskList.splice(taskIndex, 1);
+        const taskId = event.currentTarget.dataset.id;
+        deleteTask({ taskId })
+            .then(() => {
+                this.showToast('Task successfully deleted.', null, 'success');
+                this.taskList = this.taskList.filter((task) => task.Id !== taskId);
+            })
+            .catch((error) => {
+                console.error('An error ocurred... ' + error.message);
+            });
     }
 
     addTask() {
-        if (this.inputText) {
-            createTask({ subject: this.inputText, userId: this.userId })
+        if (this.taskSubject) {
+            createTask({ subject: this.taskSubject, userId: this.userId })
                 .then((task) => {
                     this.showToast('Task successfully created.', 'ID: ' + task.Id, 'success');
-                    this.taskList.push(this.inputText);
+                    this.taskList.push({ Subject: task.Subject, Id: task.Id });
                     this.clearInput();
                 })
                 .catch((error) => {
@@ -48,7 +56,7 @@ export default class ToDoList extends LightningElement {
     }
 
     clearInput() {
-        this.inputText = null;
+        this.taskSubject = null;
     }
 
     showToast(title, message, variant) {

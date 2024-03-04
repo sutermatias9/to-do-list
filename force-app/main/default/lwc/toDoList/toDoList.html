@@ -5,8 +5,9 @@
                 <div class="slds-var-p-horizontal_medium">
                     <lightning-layout vertical-align="end" class="slds-var-m-bottom_medium">
                         <lightning-layout-item size="10">
-                            <lightning-input class="input" placeholder="Enter new task..." type="text" value={inputText}
-                                onchange={handleInputChange} onkeydown={handleInputKeyDown}></lightning-input>
+                            <lightning-input class="input" placeholder="Enter new task..." type="text"
+                                value={taskSubject} onchange={handleInputChange}
+                                onkeydown={handleInputKeyDown}></lightning-input>
                         </lightning-layout-item>
                         <lightning-layout-item size="2">
                             <lightning-button variant="brand" label="Add" onclick={handleAddClick}></lightning-button>
@@ -16,8 +17,8 @@
                     <!-- Task List -->
                     <div class="slds-grid slds-grid_vertical">
                         <template for:each={taskList} for:item="task">
-                            <c-todo-list-item key={task} task={task} oncompleted={handleTaskCompleted}
-                                ondelete={handleTaskDelete}></c-todo-list-item>
+                            <c-todo-list-item key={task.Id} task={task.Subject} data-id={task.Id}
+                                oncompleted={handleTaskCompleted} ondelete={handleTaskDelete}></c-todo-list-item>
                         </template>
                     </div>
                 </div>
