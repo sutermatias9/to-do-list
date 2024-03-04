@@ -12,13 +12,6 @@ export default class TodoListItem extends LightningElement {
         this.fireEvent('delete');
     }
 
-    disableButtons() {
-        this.template.querySelectorAll('lightning-button-icon').forEach((btn) => {
-            btn.setAttribute('disabled', 'true');
-            console.log(btn);
-        });
-    }
-
     fireEvent(eventName) {
         this.dispatchEvent(new CustomEvent(eventName));
     }

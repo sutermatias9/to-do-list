@@ -1,8 +1,14 @@
 import { LightningElement, track } from 'lwc';
+import createTask from '@salesforce/apex/TaskHandler.createTask';
+
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import currentUserId from '@salesforce/user/Id';
 
 export default class ToDoList extends LightningElement {
-    @track taskList = [];
+    userId = currentUserId;
+
     inputText;
+    @track taskList = [];
 
     handleInputChange(event) {
         this.inputText = event.detail.value;
@@ -29,12 +35,28 @@ export default class ToDoList extends LightningElement {
 
     addTask() {
         if (this.inputText) {
-            this.taskList.push(this.inputText);
-            this.clearInput();
+            createTask({ subject: this.inputText, userId: this.userId })
+                .then((task) => {
+                    this.showToast('Task successfully created.', 'ID: ' + task.Id, 'success');
+                    this.taskList.push(this.inputText);
+                    this.clearInput();
+                })
+                .catch((error) => {
+                    console.error('An error ocurred... ' + error.message);
+                });
         }
     }
 
     clearInput() {
         this.inputText = null;
+    }
+
+    showToast(title, message, variant) {
+        const event = new ShowToastEvent({
+            title,
+            message,
+            variant
+        });
+        this.dispatchEvent(event);
     }
 }
