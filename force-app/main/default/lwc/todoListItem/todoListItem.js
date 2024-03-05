@@ -1,8 +1,24 @@
 import { LightningElement, api } from 'lwc';
 
 export default class TodoListItem extends LightningElement {
-    @api task;
+    _task;
+    taskClass = 'slds-text-title';
     areButtonsDisabled;
+
+    @api
+    get task() {
+        return this._task;
+    }
+    set task(value) {
+        this._task = value;
+        if (this._task.Status === 'Completed') {
+            this.markAsCompleted();
+        }
+    }
+
+    connectedCallback() {
+        console.log('task dentro de connectedCallback ' + JSON.stringify(this.task));
+    }
 
     handleMarkAsCompletedClick() {
         this.fireEvent('completed');
@@ -17,7 +33,7 @@ export default class TodoListItem extends LightningElement {
     }
 
     @api markAsCompleted() {
-        this.template.querySelector('p').classList.add('completed');
+        this.taskClass += ' completed';
         this.areButtonsDisabled = true;
     }
 }

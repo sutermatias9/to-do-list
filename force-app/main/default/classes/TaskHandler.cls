@@ -1,4 +1,13 @@
 public with sharing class TaskHandler {
+    @AuraEnabled(cacheable=true)
+    public static List<Task> getTodayTasks(){
+        Date today = Date.today();
+        try {
+            return [SELECT Id, Subject, Status FROM Task WHERE ActivityDate = :today];
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
 
     @AuraEnabled
     public static Task createTask(String subject, Id userId) {

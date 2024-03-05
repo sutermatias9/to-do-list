@@ -17,7 +17,7 @@
                     <!-- Task List -->
                     <div class="slds-grid slds-grid_vertical">
                         <template for:each={taskList} for:item="task">
-                            <c-todo-list-item key={task.Id} task={task.Subject} data-id={task.Id}
+                            <c-todo-list-item key={task.Id} task={task} data-id={task.Id}
                                 oncompleted={handleTaskCompleted} ondelete={handleTaskDelete}></c-todo-list-item>
                         </template>
                     </div>

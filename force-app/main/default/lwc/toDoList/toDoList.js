@@ -1,4 +1,5 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, wire } from 'lwc';
+import getTodayTasks from '@salesforce/apex/TaskHandler.getTodayTasks';
 import createTask from '@salesforce/apex/TaskHandler.createTask';
 import markTaskAsComplete from '@salesforce/apex/TaskHandler.markTaskAsCompleted';
 import deleteTask from '@salesforce/apex/TaskHandler.deleteTask';
@@ -10,6 +11,24 @@ export default class ToDoList extends LightningElement {
 
     taskSubject;
     @track taskList = [];
+
+    @wire(getTodayTasks)
+    getTodayTasksWired({ data, error }) {
+        if (data) {
+            this.taskList = data.map((task) => {
+                return {
+                    Id: task.Id,
+                    Subject: task.Subject,
+                    Status: task.Status
+                };
+            });
+
+            console.log('taskList ' + JSON.stringify(this.taskList));
+            console.log('-----------------------------------------------------');
+        } else if (error) {
+            console.error(error);
+        }
+    }
 
     handleInputChange(event) {
         this.taskSubject = event.detail.value;
