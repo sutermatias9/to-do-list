@@ -14,13 +14,28 @@ public with sharing class TaskHandler {
     }
 
     @AuraEnabled
+    public static void markTaskAsCompleted(Id taskId){
+        try {
+            Task task = getTask(taskId);
+            task.Status = 'Completed';
+            update task;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
     public static void deleteTask(Id taskId){
         try {
-            Task taskToDelete = [SELECT Id FROM Task WHERE Id = :taskId LIMIT 1];
+            Task taskToDelete = getTask(taskId);
 
             delete taskToDelete;
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
+    }
+
+    private static Task getTask(Id taskId) {
+        return [SELECT Id, Status FROM Task WHERE Id = :taskId LIMIT 1];
     }
 }
