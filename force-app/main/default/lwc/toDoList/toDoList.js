@@ -22,9 +22,6 @@ export default class ToDoList extends LightningElement {
                     Status: task.Status
                 };
             });
-
-            console.log('taskList ' + JSON.stringify(this.taskList));
-            console.log('-----------------------------------------------------');
         } else if (error) {
             console.error(error);
         }

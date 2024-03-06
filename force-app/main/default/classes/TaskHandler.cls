@@ -1,5 +1,14 @@
 public with sharing class TaskHandler {
     @AuraEnabled(cacheable=true)
+    public static List<Task> getCompletedTasks() {
+        try {
+            return [SELECT  ActivityDate, Subject FROM Task WHERE Status = 'Completed' ORDER BY ActivityDate DESC];
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled(cacheable=true)
     public static List<Task> getTodayTasks(){
         Date today = Date.today();
         try {
