@@ -1,5 +1,10 @@
 <template>
     <lightning-card title="Completed Tasks History">
-
+        <template for:each={tasksByDate} for:item="entry">
+            <h1 key={date}>{entry.date}</h1>
+            <template for:each={entry.tasks} for:item="task">
+                <p key={task}>{task}</p>
+            </template>
+        </template>
     </lightning-card>
 </template>
