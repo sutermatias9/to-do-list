@@ -26,15 +26,13 @@ export default class CompletedTasksHistory extends LightningElement {
                 const dateEntry = array.find((entry) => entry.date === date);
 
                 if (dateEntry) {
-                    dateEntry.tasks.push(currentTask.Subject);
+                    dateEntry.tasks.push({ Subject: currentTask.Subject });
                 } else {
-                    array.push({ date, tasks: [currentTask.Subject] });
+                    array.push({ date, tasks: [{ Subject: currentTask.Subject }] });
                 }
 
                 return array;
             }, []);
-
-            console.log('tbd: ' + JSON.stringify(this.tasksByDate));
         }
     }
 }

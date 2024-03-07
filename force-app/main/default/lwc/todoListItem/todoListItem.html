@@ -5,13 +5,15 @@
             <lightning-layout-item size="9">
                 <p class={taskClass}>{task.Subject}</p>
             </lightning-layout-item>
-            <lightning-layout-item>
-                <lightning-button-icon icon-name="utility:check" variant="brand" title="Mark as Completed" size="medium"
-                    class="slds-var-m-right_small" disabled={areButtonsDisabled}
-                    onclick={handleMarkAsCompletedClick}></lightning-button-icon>
-                <lightning-button-icon icon-name="utility:delete" title="Delete Task" size="medium"
-                    disabled={areButtonsDisabled} onclick={handleDeleteClick}></lightning-button-icon>
-            </lightning-layout-item>
+            <template if:false={isHistoryItem}>
+                <lightning-layout-item>
+                    <lightning-button-icon icon-name="utility:check" variant="brand" title="Mark as Completed"
+                        size="medium" class="slds-var-m-right_small" disabled={areButtonsDisabled}
+                        onclick={handleMarkAsCompletedClick}></lightning-button-icon>
+                    <lightning-button-icon icon-name="utility:delete" title="Delete Task" size="medium"
+                        disabled={areButtonsDisabled} onclick={handleDeleteClick}></lightning-button-icon>
+                </lightning-layout-item>
+            </template>
         </lightning-layout>
     </div>
 </template>

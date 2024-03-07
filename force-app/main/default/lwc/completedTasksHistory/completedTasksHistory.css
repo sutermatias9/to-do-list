@@ -1,0 +1,8 @@
+.history {
+    height: 64vh;
+    overflow-y: auto;
+}
+
+.list-item {
+    width: 90%;
+}

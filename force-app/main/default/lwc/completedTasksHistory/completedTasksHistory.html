@@ -1,10 +1,17 @@
+<!-- sldsValidatorIgnore -->
 <template>
-    <lightning-card title="Completed Tasks History">
-        <template for:each={tasksByDate} for:item="entry">
-            <h1 key={date}>{entry.date}</h1>
-            <template for:each={entry.tasks} for:item="task">
-                <p key={task}>{task}</p>
+    <lightning-card title="Completed Tasks History" icon-name="utility:date_input">
+        <div class="history slds-var-p-horizontal_medium slds-var-m-top_small">
+            <template for:each={tasksByDate} for:item="entry">
+                <div class="slds-var-p-bottom_small" key={date}>
+                    <h1 class="slds-text-heading_small slds-var-p-bottom_small">{entry.date}</h1>
+                    <template for:each={entry.tasks} for:item="task">
+                        <div key={task.Subject} class="list-item">
+                            <c-todo-list-item task={task} is-history-item></c-todo-list-item>
+                        </div>
+                    </template>
+                </div>
             </template>
-        </template>
+        </div>
     </lightning-card>
 </template>

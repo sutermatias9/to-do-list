@@ -1,6 +1,6 @@
 <template>
     <lightning-layout>
-        <lightning-layout-item size="6">
+        <lightning-layout-item size="6" class="slds-align_absolute-center">
             <lightning-card title="ToDo List">
                 <div class="slds-var-p-horizontal_medium">
                     <lightning-layout vertical-align="end" class="slds-var-m-bottom_medium">
@@ -18,7 +18,8 @@
                     <div class="slds-grid slds-grid_vertical">
                         <template for:each={taskList} for:item="task">
                             <c-todo-list-item key={task.Id} task={task} data-id={task.Id}
-                                oncompleted={handleTaskCompleted} ondelete={handleTaskDelete}></c-todo-list-item>
+                                oncompleted={handleTaskCompleted} ondelete={handleTaskDelete}
+                                display-buttons></c-todo-list-item>
                         </template>
                     </div>
                 </div>

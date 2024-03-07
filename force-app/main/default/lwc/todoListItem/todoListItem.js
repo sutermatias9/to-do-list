@@ -2,7 +2,9 @@ import { LightningElement, api } from 'lwc';
 
 export default class TodoListItem extends LightningElement {
     _task;
-    taskClass = 'slds-text-title';
+    taskClass = 'slds-text-title_caps';
+
+    @api isHistoryItem = false;
     areButtonsDisabled;
 
     @api
@@ -11,7 +13,7 @@ export default class TodoListItem extends LightningElement {
     }
     set task(value) {
         this._task = value;
-        if (this._task.Status === 'Completed') {
+        if (this._task.Status === 'Completed' && !this.isHistoryItem) {
             this.markAsCompleted();
         }
     }
