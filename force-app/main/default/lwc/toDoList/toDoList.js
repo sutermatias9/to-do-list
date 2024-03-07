@@ -3,14 +3,20 @@ import getTodayTasks from '@salesforce/apex/TaskHandler.getTodayTasks';
 import createTask from '@salesforce/apex/TaskHandler.createTask';
 import markTaskAsComplete from '@salesforce/apex/TaskHandler.markTaskAsCompleted';
 import deleteTask from '@salesforce/apex/TaskHandler.deleteTask';
+
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import currentUserId from '@salesforce/user/Id';
+import { MessageContext, publish } from 'lightning/messageService';
+import taskCreated from '@salesforce/messageChannel/TaskCreated__c';
 
 export default class ToDoList extends LightningElement {
     userId = currentUserId;
 
     taskSubject;
     @track taskList = [];
+
+    @wire(MessageContext)
+    messageContext;
 
     @wire(getTodayTasks)
     getTodayTasksWired({ data, error }) {
@@ -50,6 +56,7 @@ export default class ToDoList extends LightningElement {
                 this.showToast('Task Status updated.');
                 // Call c-todo-list-item @api method
                 taskItemElement.markAsCompleted();
+                this.publishMessage();
             })
             .catch((error) => {
                 console.error('An error ocurred... ' + JSON.stringify(error));
@@ -78,13 +85,18 @@ export default class ToDoList extends LightningElement {
                     this.clearInput();
                 })
                 .catch((error) => {
-                    console.error('An error ocurred... ' + error.body.message);
+                    console.error('An error ocurred... ' + JSON.stringify(error));
+                    console.log(error);
                 });
         }
     }
 
     clearInput() {
         this.taskSubject = null;
+    }
+
+    publishMessage() {
+        publish(this.messageContext, taskCreated);
     }
 
     showToast(title, message, variant = 'success') {

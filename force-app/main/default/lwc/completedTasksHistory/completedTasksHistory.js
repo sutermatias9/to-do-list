@@ -2,20 +2,36 @@ import { LightningElement, wire } from 'lwc';
 import { formatDate } from 'c/ldsUtils';
 import getCompletedTasks from '@salesforce/apex/TaskHandler.getCompletedTasks';
 
+import { subscribe, MessageContext } from 'lightning/messageService';
+import taskCreated from '@salesforce/messageChannel/TaskCreated__c';
+import { refreshApex } from '@salesforce/apex';
+
 export default class CompletedTasksHistory extends LightningElement {
     completedTasks;
     tasksByDate;
     dates;
+    wiredCompletedTasksResult;
+
+    subscription = null;
+
+    @wire(MessageContext)
+    messageContext;
 
     @wire(getCompletedTasks)
-    completedTasksWired({ data, error }) {
-        if (data) {
-            this.completedTasks = data;
+    wiredCompletedTasks(result) {
+        this.wiredCompletedTasksResult = result;
+
+        if (result.data) {
+            this.completedTasks = result.data;
             console.log('completed tasks: ' + JSON.stringify(this.completedTasks));
             this.createTaskHistory();
-        } else if (error) {
-            console.error(error);
+        } else if (result.error) {
+            console.error(result.error);
         }
+    }
+
+    connectedCallback() {
+        this.subscribeToMessageChannel();
     }
 
     createTaskHistory() {
@@ -33,6 +49,14 @@ export default class CompletedTasksHistory extends LightningElement {
 
                 return array;
             }, []);
+        }
+    }
+
+    subscribeToMessageChannel() {
+        if (!this.subscription) {
+            this.subscription = subscribe(this.messageContext, taskCreated, () =>
+                refreshApex(this.wiredCompletedTasksResult)
+            );
         }
     }
 }
