@@ -1,5 +1,5 @@
 import { LightningElement, track, wire } from 'lwc';
-import getTodayTasks from '@salesforce/apex/TaskHandler.getTodayTasks';
+import getTasks from '@salesforce/apex/TaskHandler.getTasks';
 import createTask from '@salesforce/apex/TaskHandler.createTask';
 import markTaskAsComplete from '@salesforce/apex/TaskHandler.markTaskAsCompleted';
 import deleteTask from '@salesforce/apex/TaskHandler.deleteTask';
@@ -18,8 +18,8 @@ export default class ToDoList extends LightningElement {
     @wire(MessageContext)
     messageContext;
 
-    @wire(getTodayTasks)
-    getTodayTasksWired({ data, error }) {
+    @wire(getTasks, { todayTasks: true })
+    getTasksWired({ data, error }) {
         if (data) {
             this.taskList = data.map((task) => {
                 return {

@@ -5,7 +5,10 @@
             <lightning-layout-item size="9">
                 <p class={taskClass}>{task.Subject}</p>
             </lightning-layout-item>
-            <template if:false={isHistoryItem}>
+            <template lwc:if={isHistoryItem}>
+                <slot name="buttons"></slot>
+            </template>
+            <template lwc:else>
                 <lightning-layout-item>
                     <lightning-button-icon icon-name="utility:check" variant="brand" title="Mark as Completed"
                         size="medium" class="slds-var-m-right_small" disabled={areButtonsDisabled}

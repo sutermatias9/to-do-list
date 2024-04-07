@@ -1,6 +1,7 @@
 import { LightningElement, wire } from 'lwc';
 import { formatDate } from 'c/ldsUtils';
-import getCompletedTasks from '@salesforce/apex/TaskHandler.getCompletedTasks';
+// import getCompletedTasks from '@salesforce/apex/TaskHandler.getCompletedTasks';
+import getTasks from '@salesforce/apex/TaskHandler.getTasks';
 
 import { subscribe, MessageContext } from 'lightning/messageService';
 import taskCreated from '@salesforce/messageChannel/TaskCreated__c';
@@ -9,7 +10,6 @@ import { refreshApex } from '@salesforce/apex';
 export default class CompletedTasksHistory extends LightningElement {
     completedTasks;
     tasksByDate;
-    dates;
     wiredCompletedTasksResult;
 
     subscription = null;
@@ -17,13 +17,12 @@ export default class CompletedTasksHistory extends LightningElement {
     @wire(MessageContext)
     messageContext;
 
-    @wire(getCompletedTasks)
+    @wire(getTasks, { status: 'Completed' })
     wiredCompletedTasks(result) {
         this.wiredCompletedTasksResult = result;
 
         if (result.data) {
             this.completedTasks = result.data;
-            console.log('completed tasks: ' + JSON.stringify(this.completedTasks));
             this.createTaskHistory();
         } else if (result.error) {
             console.error(result.error);

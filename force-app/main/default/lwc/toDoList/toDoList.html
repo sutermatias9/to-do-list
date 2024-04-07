@@ -1,29 +1,23 @@
 <template>
-    <lightning-layout>
-        <lightning-layout-item size="6" class="slds-align_absolute-center">
-            <lightning-card title="ToDo List" icon-name="standard:note">
-                <div class="slds-var-p-horizontal_medium">
-                    <lightning-layout vertical-align="end" horizontal-align="spread" class="slds-var-m-bottom_medium">
-                        <lightning-layout-item size="10">
-                            <lightning-input class="input" placeholder="Enter new task..." type="text"
-                                value={taskSubject} onchange={handleInputChange}
-                                onkeydown={handleInputKeyDown}></lightning-input>
-                        </lightning-layout-item>
-                        <lightning-layout-item>
-                            <lightning-button variant="brand" label="Add" onclick={handleAddClick}></lightning-button>
-                        </lightning-layout-item>
-                    </lightning-layout>
+    <lightning-card title="ToDo List" icon-name="standard:note">
+        <div class="slds-var-p-horizontal_medium">
+            <lightning-layout vertical-align="end" horizontal-align="spread" class="slds-var-m-bottom_medium">
+                <lightning-layout-item size="10">
+                    <lightning-input class="input" placeholder="Enter new task..." type="text" value={taskSubject}
+                        onchange={handleInputChange} onkeydown={handleInputKeyDown}></lightning-input>
+                </lightning-layout-item>
+                <lightning-layout-item>
+                    <lightning-button variant="brand" label="Add" onclick={handleAddClick}></lightning-button>
+                </lightning-layout-item>
+            </lightning-layout>
 
-                    <!-- Task List -->
-                    <div class="slds-grid slds-grid_vertical">
-                        <template for:each={taskList} for:item="task">
-                            <c-todo-list-item key={task.Id} task={task} data-id={task.Id}
-                                oncompleted={handleTaskCompleted} ondelete={handleTaskDelete}
-                                display-buttons></c-todo-list-item>
-                        </template>
-                    </div>
-                </div>
-            </lightning-card>
-        </lightning-layout-item>
-    </lightning-layout>
+            <!-- Task List -->
+            <div class="slds-grid slds-grid_vertical">
+                <template for:each={taskList} for:item="task">
+                    <c-todo-list-item key={task.Id} task={task} data-id={task.Id} oncompleted={handleTaskCompleted}
+                        ondelete={handleTaskDelete} display-buttons></c-todo-list-item>
+                </template>
+            </div>
+        </div>
+    </lightning-card>
 </template>

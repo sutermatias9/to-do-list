@@ -18,10 +18,6 @@ export default class TodoListItem extends LightningElement {
         }
     }
 
-    connectedCallback() {
-        console.log('task dentro de connectedCallback ' + JSON.stringify(this.task));
-    }
-
     handleMarkAsCompletedClick() {
         this.fireEvent('completed');
     }

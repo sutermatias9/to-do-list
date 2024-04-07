@@ -1,18 +1,27 @@
 public with sharing class TaskHandler {
     @AuraEnabled(cacheable=true)
-    public static List<Task> getCompletedTasks() {
+    public static List<Task> getTasks(String status, Boolean todayTasks) {
         try {
-            return [SELECT  ActivityDate, Subject FROM Task WHERE Status = 'Completed' ORDER BY ActivityDate DESC];
-        } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
-        }
-    }
+            String query = 'SELECT Id, ActivityDate, Subject, Status FROM Task ';
 
-    @AuraEnabled(cacheable=true)
-    public static List<Task> getTodayTasks(){
-        Date today = Date.today();
-        try {
-            return [SELECT Id, Subject, Status FROM Task WHERE ActivityDate = :today];
+            if (!String.isBlank(status)) {
+                query += 'WHERE Status = :status ';
+            }
+
+            if (todayTasks != null) {
+                if (query.contains('WHERE')) {
+                    query += 'AND ';
+                } else {
+                    query += 'WHERE ';
+                }
+                query += todayTasks ? 'ActivityDate = TODAY ' : 'ActivityDate != TODAY ';
+            }
+
+            System.debug(query);
+            System.debug(status);
+            System.debug(todayTasks);
+
+            return (List<Task>) Database.query(query + 'ORDER BY ActivityDate DESC ');
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
@@ -32,7 +41,18 @@ public with sharing class TaskHandler {
     }
 
     @AuraEnabled
-    public static void markTaskAsCompleted(Id taskId){
+    public static void setActivityDate(Id taskId, Date newDate) {
+        try {
+            Task t = getTask(taskId);
+            t.ActivityDate = newDate;
+            update t;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static void markTaskAsCompleted(Id taskId) {
         try {
             Task task = getTask(taskId);
             task.Status = 'Completed';
@@ -43,7 +63,7 @@ public with sharing class TaskHandler {
     }
 
     @AuraEnabled
-    public static void deleteTask(Id taskId){
+    public static void deleteTask(Id taskId) {
         try {
             Task taskToDelete = getTask(taskId);
 
@@ -54,6 +74,6 @@ public with sharing class TaskHandler {
     }
 
     private static Task getTask(Id taskId) {
-        return [SELECT Id, Status FROM Task WHERE Id = :taskId LIMIT 1];
+        return [SELECT Id, Status, ActivityDate FROM Task WHERE Id = :taskId LIMIT 1];
     }
 }
