@@ -88,6 +88,8 @@ export default class ToDoList extends LightningElement {
                     console.error('An error ocurred... ' + JSON.stringify(error));
                     console.log(error);
                 });
+        } else {
+            this.showToast('Please enter a task.', null, 'error');
         }
     }
 

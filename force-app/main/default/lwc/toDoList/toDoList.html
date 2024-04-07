@@ -1,15 +1,15 @@
 <template>
     <lightning-layout>
         <lightning-layout-item size="6" class="slds-align_absolute-center">
-            <lightning-card title="ToDo List">
+            <lightning-card title="ToDo List" icon-name="standard:note">
                 <div class="slds-var-p-horizontal_medium">
-                    <lightning-layout vertical-align="end" class="slds-var-m-bottom_medium">
+                    <lightning-layout vertical-align="end" horizontal-align="spread" class="slds-var-m-bottom_medium">
                         <lightning-layout-item size="10">
                             <lightning-input class="input" placeholder="Enter new task..." type="text"
                                 value={taskSubject} onchange={handleInputChange}
                                 onkeydown={handleInputKeyDown}></lightning-input>
                         </lightning-layout-item>
-                        <lightning-layout-item size="2">
+                        <lightning-layout-item>
                             <lightning-button variant="brand" label="Add" onclick={handleAddClick}></lightning-button>
                         </lightning-layout-item>
                     </lightning-layout>
