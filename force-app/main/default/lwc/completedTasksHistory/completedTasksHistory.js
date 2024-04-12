@@ -12,6 +12,7 @@ export default class CompletedTasksHistory extends LightningElement {
     wiredCompletedTasksResult;
 
     subscription = null;
+    error = null;
 
     @wire(MessageContext)
     messageContext;
@@ -24,7 +25,7 @@ export default class CompletedTasksHistory extends LightningElement {
             this.completedTasks = result.data;
             this.createTaskHistory();
         } else if (result.error) {
-            console.error(result.error);
+            this.error = result.error;
         }
     }
 

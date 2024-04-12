@@ -13,11 +13,11 @@ import deleteTask from '@salesforce/apex/TaskHandler.deleteTask';
 
 export default class ToDoList extends LightningElement {
     userId = currentUserId;
-
     taskSubject;
     @track taskList = [];
 
     subscription = null;
+    error = null;
 
     @wire(MessageContext)
     messageContext;
@@ -35,7 +35,7 @@ export default class ToDoList extends LightningElement {
                 };
             });
         } else if (result.error) {
-            console.error(result.error);
+            this.error = result.error;
         }
     }
 
@@ -69,7 +69,7 @@ export default class ToDoList extends LightningElement {
                 this.publishMessage();
             })
             .catch((error) => {
-                console.error('An error ocurred... ' + JSON.stringify(error));
+                this.error = error;
             });
     }
 
@@ -82,7 +82,7 @@ export default class ToDoList extends LightningElement {
                 this.taskList = this.taskList.filter((task) => task.Id !== taskId);
             })
             .catch((error) => {
-                console.error('An error ocurred... ' + error.body.message);
+                this.error = error;
             });
     }
 
@@ -95,8 +95,7 @@ export default class ToDoList extends LightningElement {
                     this.clearInput();
                 })
                 .catch((error) => {
-                    console.error('An error ocurred... ' + JSON.stringify(error));
-                    console.log(error);
+                    this.error = error;
                 });
         } else {
             this.showToast('Please enter a task.', null, 'error');

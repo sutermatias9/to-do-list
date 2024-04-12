@@ -1,7 +1,7 @@
 import { LightningElement, wire } from 'lwc';
 import { refreshApex } from '@salesforce/apex';
 import { MessageContext, publish } from 'lightning/messageService';
-import taskAdded from '@salesforce/messageChannel/TaskAdded__c'; // peude fallar por el nombre de meta
+import taskAdded from '@salesforce/messageChannel/TaskAdded__c';
 
 import { formatDate } from 'c/ldsUtils';
 import getTasks from '@salesforce/apex/TaskHandler.getTasks';
@@ -12,6 +12,7 @@ export default class UncompletedTasksHistory extends LightningElement {
     tasksByDate;
 
     wiredTasksResult;
+    error = null;
 
     @wire(MessageContext)
     messageContext;
@@ -23,8 +24,7 @@ export default class UncompletedTasksHistory extends LightningElement {
             this.wiredTasksResult = result;
             this.createTaskHistory();
         } else if (result.error) {
-            console.log('Error ut..');
-            console.error(result.error);
+            this.error = result.error;
         }
     }
 
@@ -38,8 +38,7 @@ export default class UncompletedTasksHistory extends LightningElement {
                 refreshApex(this.wiredTasksResult);
             })
             .catch((err) => {
-                console.log('ERROR AL UPDATEAR');
-                console.error(err);
+                this.error = err;
             });
     }
 
@@ -58,7 +57,6 @@ export default class UncompletedTasksHistory extends LightningElement {
 
                 return array;
             }, []);
-            console.log(JSON.stringify(this.tasksByDate));
         }
     }
 
@@ -75,7 +73,6 @@ export default class UncompletedTasksHistory extends LightningElement {
     }
 
     publishMessage() {
-        console.log('publishing msg');
         publish(this.messageContext, taskAdded);
     }
 }
