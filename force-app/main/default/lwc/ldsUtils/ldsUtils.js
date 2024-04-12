@@ -19,7 +19,7 @@ export function formatDate(date) {
     }
 
     const [, monthNumber, day] = date.split('-').map((el) => Number(el));
-    const month = MONTHS[monthNumber];
+    const month = MONTHS[monthNumber - 1];
 
     return `${month} ${day}`;
 }
