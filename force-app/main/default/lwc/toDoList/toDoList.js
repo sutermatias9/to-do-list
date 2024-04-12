@@ -1,13 +1,15 @@
 import { LightningElement, track, wire } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { refreshApex } from '@salesforce/apex';
+import { MessageContext, publish, subscribe } from 'lightning/messageService';
+import taskCreated from '@salesforce/messageChannel/TaskCreated__c';
+import TaskAdded from '@salesforce/messageChannel/TaskAdded__c';
+
+import currentUserId from '@salesforce/user/Id';
 import getTasks from '@salesforce/apex/TaskHandler.getTasks';
 import createTask from '@salesforce/apex/TaskHandler.createTask';
 import markTaskAsComplete from '@salesforce/apex/TaskHandler.markTaskAsCompleted';
 import deleteTask from '@salesforce/apex/TaskHandler.deleteTask';
-
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import currentUserId from '@salesforce/user/Id';
-import { MessageContext, publish } from 'lightning/messageService';
-import taskCreated from '@salesforce/messageChannel/TaskCreated__c';
 
 export default class ToDoList extends LightningElement {
     userId = currentUserId;
@@ -15,22 +17,30 @@ export default class ToDoList extends LightningElement {
     taskSubject;
     @track taskList = [];
 
+    subscription = null;
+
     @wire(MessageContext)
     messageContext;
 
     @wire(getTasks, { todayTasks: true })
-    getTasksWired({ data, error }) {
-        if (data) {
-            this.taskList = data.map((task) => {
+    getTasksWired(result) {
+        this.wiredTasks = result;
+
+        if (result.data) {
+            this.taskList = result.data.map((task) => {
                 return {
                     Id: task.Id,
                     Subject: task.Subject,
                     Status: task.Status
                 };
             });
-        } else if (error) {
-            console.error(error);
+        } else if (result.error) {
+            console.error(result.error);
         }
+    }
+
+    connectedCallback() {
+        this.subscribeToMessageChannel();
     }
 
     handleInputChange(event) {
@@ -108,5 +118,14 @@ export default class ToDoList extends LightningElement {
             variant
         });
         this.dispatchEvent(event);
+    }
+
+    subscribeToMessageChannel() {
+        if (!this.subscription) {
+            this.subscription = subscribe(this.messageContext, TaskAdded, () => {
+                refreshApex(this.wiredTasks);
+                this.showToast('Task added!');
+            });
+        }
     }
 }

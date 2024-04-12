@@ -1,11 +1,10 @@
 import { LightningElement, wire } from 'lwc';
 import { formatDate } from 'c/ldsUtils';
-// import getCompletedTasks from '@salesforce/apex/TaskHandler.getCompletedTasks';
-import getTasks from '@salesforce/apex/TaskHandler.getTasks';
-
-import { subscribe, MessageContext } from 'lightning/messageService';
-import taskCreated from '@salesforce/messageChannel/TaskCreated__c';
 import { refreshApex } from '@salesforce/apex';
+import { subscribe, MessageContext } from 'lightning/messageService';
+
+import taskCreated from '@salesforce/messageChannel/TaskCreated__c';
+import getTasks from '@salesforce/apex/TaskHandler.getTasks';
 
 export default class CompletedTasksHistory extends LightningElement {
     completedTasks;

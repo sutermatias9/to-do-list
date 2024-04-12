@@ -1,6 +1,9 @@
 import { LightningElement, wire } from 'lwc';
-import { formatDate } from 'c/ldsUtils';
 import { refreshApex } from '@salesforce/apex';
+import { MessageContext, publish } from 'lightning/messageService';
+import taskAdded from '@salesforce/messageChannel/TaskAdded__c'; // peude fallar por el nombre de meta
+
+import { formatDate } from 'c/ldsUtils';
 import getTasks from '@salesforce/apex/TaskHandler.getTasks';
 import setActivityDate from '@salesforce/apex/TaskHandler.setActivityDate';
 
@@ -9,6 +12,9 @@ export default class UncompletedTasksHistory extends LightningElement {
     tasksByDate;
 
     wiredTasksResult;
+
+    @wire(MessageContext)
+    messageContext;
 
     @wire(getTasks, { status: 'In Progress', todayTasks: false })
     wiredUncompletedTasks(result) {
@@ -28,6 +34,7 @@ export default class UncompletedTasksHistory extends LightningElement {
         setActivityDate({ taskId, newDate: this.getCurrentDate() })
             .then(() => {
                 console.log('task successfully updated');
+                this.publishMessage();
                 refreshApex(this.wiredTasksResult);
             })
             .catch((err) => {
@@ -62,6 +69,13 @@ export default class UncompletedTasksHistory extends LightningElement {
         let month = date.getMonth() + 1;
         let year = date.getFullYear();
 
-        return `${year}-${month < 10 ? '0' + month : month}-${day}`;
+        const dateString = `${year}-${month < 10 ? '0' + month : month}-${day}`;
+
+        return new Date(dateString);
+    }
+
+    publishMessage() {
+        console.log('publishing msg');
+        publish(this.messageContext, taskAdded);
     }
 }
