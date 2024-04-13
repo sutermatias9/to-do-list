@@ -39,6 +39,11 @@ export default class ToDoList extends LightningElement {
         }
     }
 
+    get hasTasks() {
+        console.log('has tasks? ' + this.taskList.length > 0);
+        return this.taskList.length > 0;
+    }
+
     connectedCallback() {
         this.subscribeToMessageChannel();
     }

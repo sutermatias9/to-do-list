@@ -10,7 +10,7 @@
                     <div class="slds-var-p-bottom_small" key={date}>
                         <h1 class="slds-text-heading_small slds-var-p-bottom_small">{entry.date}</h1>
                         <template for:each={entry.tasks} for:item="task">
-                            <div key={task.Subject} class="list-item">
+                            <div key={task.Subject}>
                                 <c-todo-list-item task={task} is-history-item></c-todo-list-item>
                             </div>
                         </template>

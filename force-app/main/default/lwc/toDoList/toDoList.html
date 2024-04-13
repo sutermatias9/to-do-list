@@ -13,14 +13,17 @@
 
             <!-- Task List -->
             <div class="slds-grid slds-grid_vertical">
-                <template lwc:if={error}>
-                    <c-error-panel errors={error}></c-error-panel>
-                </template>
-                <template lwc:else>
+                <template lwc:if={hasTasks}>
                     <template for:each={taskList} for:item="task">
                         <c-todo-list-item key={task.Id} task={task} data-id={task.Id} oncompleted={handleTaskCompleted}
                             ondelete={handleTaskDelete} display-buttons></c-todo-list-item>
                     </template>
+                </template>
+                <template lwc:elseif={error}>
+                    <c-error-panel errors={error}></c-error-panel>
+                </template>
+                <template lwc:else>
+                    <c-desert-illustration message="No tasks added yet."></c-desert-illustration>
                 </template>
             </div>
         </div>
