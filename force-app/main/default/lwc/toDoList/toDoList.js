@@ -40,7 +40,6 @@ export default class ToDoList extends LightningElement {
     }
 
     get hasTasks() {
-        console.log('has tasks? ' + this.taskList.length > 0);
         return this.taskList.length > 0;
     }
 
@@ -54,6 +53,7 @@ export default class ToDoList extends LightningElement {
 
     handleInputKeyDown(event) {
         if (event.key === 'Enter') {
+            // event.preventDefault();
             this.addTask();
         }
     }
